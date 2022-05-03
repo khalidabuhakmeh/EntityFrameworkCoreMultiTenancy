@@ -2,11 +2,14 @@ using EntityFrameworkCoreMultiTenancy;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// tenant setter & getter
 builder.Services.AddScopedAs<TenantService>(new[] {typeof(ITenantGetter), typeof(ITenantSetter)});
 
 // IOptions version of tenants
 builder.Services.Configure<TenantConfigurationSection>(builder.Configuration);
 
+// middleware that sets the current tenant
 builder.Services.AddScoped<MultiTenantServiceMiddleware>();
 builder.Services.AddDbContext<Database>((s, o) =>
 {

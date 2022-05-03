@@ -2,7 +2,8 @@ namespace EntityFrameworkCoreMultiTenancy;
 
 public static class RegistrationExtensions
 {
-    public static IServiceCollection AddScopedAs<T>(this IServiceCollection services, IEnumerable<Type> types) 
+    public static IServiceCollection AddScopedAs<T>(
+        this IServiceCollection services, IEnumerable<Type> types) 
         where T : class
     {
         // register the type first

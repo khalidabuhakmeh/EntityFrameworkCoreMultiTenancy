@@ -1,0 +1,28 @@
+using EntityFrameworkCoreMultiTenancy;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScopedAs<TenantService>(new[] {
+    typeof(ITenantService),
+    typeof(ITenantSetter)
+});
+builder.Services.AddScoped<MultiTenantServiceMiddleware>();
+builder.Services.AddDbContext<Database>(db => {
+    db.UseSqlite("Data Source=multi-tenant.db");
+});
+var app = builder.Build();
+
+// initialize the database
+using (var scope = app.Services.CreateScope()) {
+    var db = scope.ServiceProvider.GetRequiredService<Database>();
+    await db.Database.MigrateAsync();    
+}
+
+// middleware that reads and sets the tenant
+app.UseMiddleware<MultiTenantServiceMiddleware>();
+
+// multi-tenant request, try adding ?tenant=Khalid or ?tenant=Internet (default)
+app.MapGet("/", async (Database db) => await db.Animals.ToListAsync());
+
+app.Run();

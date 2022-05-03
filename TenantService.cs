@@ -13,7 +13,7 @@ public static class Tenants
     }
 }
 
-public class TenantService : ITenantService, ITenantSetter
+public class TenantService : ITenantGetter, ITenantSetter
 {
     public string Tenant { get; private set; } = Tenants.Internet;
 
@@ -23,7 +23,7 @@ public class TenantService : ITenantService, ITenantSetter
     }
 }
 
-public interface ITenantService 
+public interface ITenantGetter 
 {
     string Tenant { get; }
 }

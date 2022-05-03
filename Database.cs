@@ -9,10 +9,10 @@ public class Database : DbContext
 
     public DbSet<Animal> Animals { get; set; } = default!;
 
-    public Database(DbContextOptions<Database> options, ITenantService tenantService)
+    public Database(DbContextOptions<Database> options, ITenantGetter tenantGetter)
         : base(options)
     {
-        tenant = tenantService.Tenant;
+        tenant = tenantGetter.Tenant;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

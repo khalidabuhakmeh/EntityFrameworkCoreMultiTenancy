@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScopedAs<TenantService>(new[] {
-    typeof(ITenantService),
+    typeof(ITenantGetter),
     typeof(ITenantSetter)
 });
+
 builder.Services.AddScoped<MultiTenantServiceMiddleware>();
 builder.Services.AddDbContext<Database>(db => {
     db.UseSqlite("Data Source=multi-tenant.db");
@@ -23,6 +24,10 @@ using (var scope = app.Services.CreateScope()) {
 app.UseMiddleware<MultiTenantServiceMiddleware>();
 
 // multi-tenant request, try adding ?tenant=Khalid or ?tenant=Internet (default)
-app.MapGet("/", async (Database db) => await db.Animals.ToListAsync());
+app.MapGet("/", async (Database db) => await db
+    .Animals
+    // hide the tenant, which is response noise
+    .Select(x => new { x.Id, x.Name, x.Kind })
+    .ToListAsync());
 
 app.Run();

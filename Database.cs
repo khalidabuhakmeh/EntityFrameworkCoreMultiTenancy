@@ -29,6 +29,22 @@ public class Database : DbContext
                 new() {Id = 4, Kind = "Cat", Name = "Mr. Bigglesworth", Tenant = "Internet"}
             );
     }
+
+    public static async Task Initialize(WebApplication app)
+    {
+        // initialize the databases
+        var tenantConfig = app.Configuration.Get<TenantConfigurationSection>()!;
+        foreach (var tenant in tenantConfig.Tenants)
+        {
+            using var scope = app.Services.CreateScope();
+            var tenantSetter = scope.ServiceProvider.GetRequiredService<ITenantSetter>();
+            tenantSetter.SetTenant(tenant);
+
+            var db = scope.ServiceProvider.GetRequiredService<Database>();
+            await db.Database.MigrateAsync();
+        }
+    }
+    
 }
 
 public class Animal

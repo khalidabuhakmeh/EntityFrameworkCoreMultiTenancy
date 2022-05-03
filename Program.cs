@@ -17,19 +17,9 @@ builder.Services.AddDbContext<Database>((s, o) =>
     // multi-tenant databases, happy Maarten?!
     o.UseSqlite(tenant.ConnectionString);
 });
+
 var app = builder.Build();
-
-// initialize the databases
-var tenantConfig = builder.Configuration.Get<TenantConfigurationSection>()!;
-foreach (var tenant in tenantConfig.Tenants)
-{
-    using var scope = app.Services.CreateScope();
-    var tenantSetter = scope.ServiceProvider.GetRequiredService<ITenantSetter>();
-    tenantSetter.SetTenant(tenant);
-
-    var db = scope.ServiceProvider.GetRequiredService<Database>();
-    await db.Database.MigrateAsync();
-}
+await Database.Initialize(app);
 
 // middleware that reads and sets the tenant
 app.UseMiddleware<MultiTenantServiceMiddleware>();

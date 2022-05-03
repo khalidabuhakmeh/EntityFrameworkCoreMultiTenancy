@@ -1,23 +1,32 @@
+using Microsoft.Extensions.Options;
+
 namespace EntityFrameworkCoreMultiTenancy;
 
-public static class Tenants
+#nullable disable
+public class Tenant
 {
-    public const string Internet = nameof(Internet);
-    public const string Khalid = nameof(Khalid);
-
-    public static IReadOnlyCollection<string> All = new[] {Internet, Khalid};
-
-    public static string Find(string? value)
-    {
-        return All.FirstOrDefault(t => t.Equals(value?.Trim(), StringComparison.OrdinalIgnoreCase)) ?? Internet;
-    }
+    public string Name { get; set; }
+    public string ConnectionString { get; set; }
 }
+
+public class TenantConfigurationSection
+{
+    public List<Tenant> Tenants { get; set; }
+}
+#nullable enable
 
 public class TenantService : ITenantGetter, ITenantSetter
 {
-    public string Tenant { get; private set; } = Tenants.Internet;
+    private readonly IOptions<TenantConfigurationSection> config;
 
-    public void SetTenant(string tenant)
+    public TenantService(IOptions<TenantConfigurationSection> config)
+    {
+        this.config = config;
+    }
+
+    public Tenant Tenant { get; private set; } = default!;
+
+    public void SetTenant(Tenant tenant)
     {
         Tenant = tenant;
     }
@@ -25,10 +34,10 @@ public class TenantService : ITenantGetter, ITenantSetter
 
 public interface ITenantGetter 
 {
-    string Tenant { get; }
+    Tenant Tenant { get; }
 }
 
 public interface ITenantSetter
 {
-    void SetTenant(string tenant);
+    void SetTenant(Tenant key);
 }

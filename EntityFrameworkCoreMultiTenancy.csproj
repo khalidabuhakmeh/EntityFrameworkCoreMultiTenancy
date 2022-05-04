@@ -15,4 +15,14 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0-preview.3.22175.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="internet.db" />
+      <None Remove="khalid.db" />
+      <None Remove="multi-tenant.db" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Migrations" />
+    </ItemGroup>
+
 </Project>

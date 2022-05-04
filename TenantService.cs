@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Options;
-
 namespace EntityFrameworkCoreMultiTenancy;
 
 #nullable disable
@@ -17,13 +15,6 @@ public class TenantConfigurationSection
 
 public class TenantService : ITenantGetter, ITenantSetter
 {
-    private readonly IOptions<TenantConfigurationSection> config;
-
-    public TenantService(IOptions<TenantConfigurationSection> config)
-    {
-        this.config = config;
-    }
-
     public Tenant Tenant { get; private set; } = default!;
 
     public void SetTenant(Tenant tenant)

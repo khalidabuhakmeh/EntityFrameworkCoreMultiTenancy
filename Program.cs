@@ -13,9 +13,12 @@ builder.Services.Configure<TenantConfigurationSection>(builder.Configuration);
 builder.Services.AddScoped<MultiTenantServiceMiddleware>();
 builder.Services.AddDbContext<Database>((s, o) =>
 {
-    var tenant = s.GetRequiredService<ITenantGetter>().Tenant;
-    // multi-tenant databases, happy Maarten?!
-    o.UseSqlite(tenant.ConnectionString);
+    o.UseApplicationServiceProvider(s);
+    var tenant = s.GetService<ITenantGetter>()?.Tenant;
+    // for migrations
+    var connectionString = tenant?.ConnectionString ?? "Data Source=default.db";
+    // multi-tenant databases
+    o.UseSqlite(connectionString);
 });
 
 var app = builder.Build();

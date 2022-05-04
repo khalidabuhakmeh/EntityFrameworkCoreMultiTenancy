@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EntityFrameworkCoreMultiTenancy.Migrations
 {
     [DbContext(typeof(Database))]
-    [Migration("20220503143418_Initial")]
-    partial class Initial
+    [Migration("20220504182451_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,36 +40,6 @@ namespace EntityFrameworkCoreMultiTenancy.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Animals");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Kind = "Dog",
-                            Name = "Samson",
-                            Tenant = "Khalid"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Kind = "Dog",
-                            Name = "Guiness",
-                            Tenant = "Khalid"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Kind = "Cat",
-                            Name = "Grumpy Cat",
-                            Tenant = "Internet"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Kind = "Cat",
-                            Name = "Mr. Bigglesworth",
-                            Tenant = "Internet"
-                        });
                 });
 #pragma warning restore 612, 618
         }

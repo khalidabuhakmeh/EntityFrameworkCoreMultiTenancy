@@ -8,7 +8,10 @@ public class MultiTenantServiceMiddleware : IMiddleware
     private readonly IOptions<TenantConfigurationSection> config;
     private readonly ILogger<MultiTenantServiceMiddleware> logger;
 
-    public MultiTenantServiceMiddleware(ITenantSetter setter, IOptions<TenantConfigurationSection> config, ILogger<MultiTenantServiceMiddleware> logger)
+    public MultiTenantServiceMiddleware(
+        ITenantSetter setter, 
+        IOptions<TenantConfigurationSection> config, 
+        ILogger<MultiTenantServiceMiddleware> logger)
     {
         this.setter = setter;
         this.config = config;

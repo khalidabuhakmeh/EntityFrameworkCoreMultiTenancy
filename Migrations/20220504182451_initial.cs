@@ -5,7 +5,7 @@
 namespace EntityFrameworkCoreMultiTenancy.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,26 +24,6 @@ namespace EntityFrameworkCoreMultiTenancy.Migrations
                 {
                     table.PrimaryKey("PK_Animals", x => x.Id);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Animals",
-                columns: new[] { "Id", "Kind", "Name", "Tenant" },
-                values: new object[] { 1, "Dog", "Samson", "Khalid" });
-
-            migrationBuilder.InsertData(
-                table: "Animals",
-                columns: new[] { "Id", "Kind", "Name", "Tenant" },
-                values: new object[] { 2, "Dog", "Guiness", "Khalid" });
-
-            migrationBuilder.InsertData(
-                table: "Animals",
-                columns: new[] { "Id", "Kind", "Name", "Tenant" },
-                values: new object[] { 3, "Cat", "Grumpy Cat", "Internet" });
-
-            migrationBuilder.InsertData(
-                table: "Animals",
-                columns: new[] { "Id", "Kind", "Name", "Tenant" },
-                values: new object[] { 4, "Cat", "Mr. Bigglesworth", "Internet" });
         }
 
         /// <inheritdoc />

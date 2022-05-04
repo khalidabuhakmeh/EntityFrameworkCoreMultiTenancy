@@ -13,7 +13,6 @@ builder.Services.Configure<TenantConfigurationSection>(builder.Configuration);
 builder.Services.AddScoped<MultiTenantServiceMiddleware>();
 builder.Services.AddDbContext<Database>((s, o) =>
 {
-    o.UseApplicationServiceProvider(s);
     var tenant = s.GetService<ITenantGetter>()?.Tenant;
     // for migrations
     var connectionString = tenant?.ConnectionString ?? "Data Source=default.db";

@@ -12,7 +12,7 @@ sequenceDiagram
     participant endpoint    
     request->>middleware: /?tenant=Khalid
     middleware->>endpoint: TenantService.Set("Khalid")
-    endpoint->>request: Filterered Query by Tenant
+    endpoint->>request: Filtered Query by Tenant
 ```
 
 We are utilizing EF Core Query Filters, but they are optional.

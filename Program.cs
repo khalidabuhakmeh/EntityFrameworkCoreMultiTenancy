@@ -3,13 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScopedAs<TenantService>(new[] {
-    typeof(ITenantGetter),
-    typeof(ITenantSetter)
-});
-
 builder.Services.AddScoped<MultiTenantServiceMiddleware>();
-builder.Services.AddDbContext<Database>(db => {
+builder.Services.AddDbContextPool<Database>(db => {
     db.UseSqlite("Data Source=multi-tenant.db");
 });
 var app = builder.Build();

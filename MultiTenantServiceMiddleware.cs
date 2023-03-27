@@ -2,24 +2,18 @@ namespace EntityFrameworkCoreMultiTenancy;
 
 public class MultiTenantServiceMiddleware : IMiddleware
 {
-    private readonly ITenantSetter setter;
-
-    public MultiTenantServiceMiddleware(ITenantSetter setter)
-    {
-        this.setter = setter;
-    }
-    
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        var db = context.RequestServices.GetRequiredService<Database>();
         if (context.Request.Query.TryGetValue("tenant", out var values))
         {
             var tenant = Tenants.Find(values.FirstOrDefault());
-            setter.SetTenant(tenant);
+            db.Tenants = new[] { tenant };
         }
         else
         {
             // set default tenant
-            setter.SetTenant(Tenants.Internet);
+            db.Tenants = new[] { Tenants.Internet };
         }
 
         await next(context);

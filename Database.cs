@@ -1,25 +1,30 @@
-
 using Microsoft.EntityFrameworkCore;
+using static EntityFrameworkCoreMultiTenancy.Tenants;
 
 namespace EntityFrameworkCoreMultiTenancy;
 
 public class Database : DbContext
 {
-    private readonly string tenant;
+    /// <summary>
+    /// Will get set by middleware
+    /// </summary>
+    public IEnumerable<string> Tenants { get; set; } 
+        = All;
 
-    public DbSet<Animal> Animals { get; set; } = default!;
+    public DbSet<Animal> Animals => Set<Animal>();
 
-    public Database(DbContextOptions<Database> options, ITenantGetter tenantGetter)
+    public Database(DbContextOptions<Database> options)
         : base(options)
     {
-        tenant = tenantGetter.Tenant;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .Entity<Animal>()
-            .HasQueryFilter(a => a.Tenant == tenant)
+            // Uses the property on the instance
+            // this needs to get set on each request
+            .HasQueryFilter(a => Tenants.Contains(a.Tenant))
             .HasData(
                 new() {Id = 1, Kind = "Dog", Name = "Samson", Tenant = "Khalid"},
                 new() {Id = 2, Kind = "Dog", Name = "Guinness", Tenant = "Khalid"},
@@ -34,5 +39,5 @@ public class Animal
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Kind { get; set; } = string.Empty;
-    public string Tenant { get; set; } = Tenants.Internet;
+    public string Tenant { get; set; } = Internet;
 }
